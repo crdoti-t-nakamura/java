@@ -1,7 +1,7 @@
 package test1;
 
 // キャラクタの基礎となるクラス
-public class Character {
+public abstract class Character {
 
 	// ステータス用
 	public static final int NORMAL = 0;			// ０、異常なし
@@ -100,22 +100,14 @@ public class Character {
 	}
 
 	// 前へダッシュ
-	public void dash() {
-		// 今は何もしない
-	}
+	public abstract void dash();
 
 	// 後ろへバック
-	public void back() {
-		// 今は何もしない
-	}
+	public abstract void back();
 
 	// 攻撃する
-	public void attack() {
-		// 今は何もしない
-	}
+	public abstract void attack(Character e);
 
 	// 特定の攻撃を受けたときスタンする
-	public void stun() {
-		// 今は何もしない
-	}
+	public abstract void stun();
 }

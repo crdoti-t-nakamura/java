@@ -14,7 +14,7 @@ public class Player extends Character {
 	}
 
 	// attackメソッドを再定義
-	public void attack(Enemy e) {
+	public void attack(Character e) {
 
 		// 攻撃力、守備力に補正（ランダム）をかける
 		int attackRandom = new java.util.Random().nextInt(this.getAttack());
