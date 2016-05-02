@@ -1,0 +1,45 @@
+package test2;
+
+public class FishName extends Fish {
+
+	// 変数の宣言
+	private String name1;
+	private String name2;
+	private String name3;
+
+	// コンストラクタ
+	FishName(int no, String title, String url, String name1, String name2, String name3) {
+		super(no, title, url);
+		this.name1 = name1;
+		this.name2 = name2;
+		this.name3 = name3;
+	}
+	FishName(int no, String title, String url, String name1, String name2) {
+		this(no, title, url, name1, name2, "");
+	}
+	FishName(int no, String title, String url, String name1) {
+		this(no, title, url, name1, "", "");
+	}
+
+	// ゲッター
+	public String getName1() {
+		return this.name1;
+	}
+	public String getName2() {
+		return this.name2;
+	}
+	public String getName3() {
+		return this.name3;
+	}
+
+	// セッター
+	public void setName1(String name) {
+		this.name1 = name;
+	}
+	public void setName2(String name) {
+		this.name2 = name;
+	}
+	public void setName3(String name) {
+		this.name3 = name;
+	}
+}

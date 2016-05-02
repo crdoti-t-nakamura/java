@@ -1,0 +1,15 @@
+package test2;
+
+public class Result {
+
+	// 変数の宣言
+	private String title;
+	private Fish fishList;
+
+	Result() {
+
+		
+
+	}
+
+}

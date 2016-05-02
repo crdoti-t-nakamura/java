@@ -1,0 +1,37 @@
+package test1;
+
+public class Result {
+
+	// 変数の宣言
+	private String title;
+	private FishList fishList[];
+
+	// コンストラクタ
+	Result() {
+		this.title = "猛毒シリーズ";
+		this.fishList[0] = new FishList( 1, "アオブダイ", "http://crdoti.co.jp/furuya/1.png");
+		this.fishList[1] = new FishList( 2, "ヒョウモンダコ", "http://crdoti.co.jp/furuya/2.png");
+		this.fishList[2] = new FishList( 3, "ハナブサイソギンチャク", "http://crdoti.co.jp/furuya/3.png");
+		this.fishList[3] = new FishList( 4, "キロネックス", "http://crdoti.co.jp/furuya/4.png");
+		this.fishList[4] = new FishList( 5, "アンボイナ", "http://crdoti.co.jp/furuya/5.png");
+		this.fishList[5] = new FishList( 6, "ウミケムシ", "http://crdoti.co.jp/furuya/6.png");
+		this.fishList[6] = new FishList( 7, "スベスベマンジュウガニ", "http://crdoti.co.jp/furuya/7.png");
+		this.fishList[7] = new FishList( 8, "オリーブミナミウミヘビ", "http://crdoti.co.jp/furuya/8.png");
+		this.fishList[8] = new FishList( 9, "カツオノエボシ", "http://crdoti.co.jp/furuya/9.png");
+		this.fishList[9] = new FishList(10, "オニダルマオコゼ", "http://crdoti.co.jp/furuya/10.png");
+	}
+
+	// ゲッター
+	public String getTitle () {
+		return this.title;
+	}
+	public FishList getFishList (int i) {
+		return this.fishList[i];
+	}
+
+	// セッター
+	public void setTitle (String title) {
+		this.title = title;
+	}
+
+}

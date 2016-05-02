@@ -1,0 +1,28 @@
+package test1;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class Result {
+
+	// 変数の宣言
+	private String title;
+	String json = "[{\"id\":15, \"name\":\"hoge\"}, {\"id\":16, \"name\":\"fuga\"}]";
+
+	ObjectMapper mapper = new ObjectMapper();
+
+//	List<Fish> fishList = mapper.readValue(json, new TypeReference<List<Fish>>() {});
+
+	// コンストラクタ
+	Result() {}
+
+	// ゲッター
+	public String getTitle () {
+		return this.title;
+	}
+
+	// セッター
+	public void setTitle (String title) {
+		this.title = title;
+	}
+
+}

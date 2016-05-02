@@ -1,0 +1,23 @@
+package list10_4;
+
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.Properties;
+
+
+public class Main {
+
+	// メインメソッド
+	public static void main(String[] args) throws Exception {
+
+		Reader fr = new FileReader("c:\\rpgdata.properties");
+
+		Properties p = new Properties();
+
+		p.load(fr);
+
+
+
+	}
+
+}

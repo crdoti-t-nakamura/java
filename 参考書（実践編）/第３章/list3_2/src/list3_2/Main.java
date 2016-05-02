@@ -1,0 +1,28 @@
+//---------------------------------------------------------------------------------------------------------
+//
+//
+//
+//---------------------------------------------------------------------------------------------------------
+package list3_2;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class Main {
+
+	// メインメソッド
+	public static void main(String[] args) {
+
+		// String型でArrayListを宣言
+		ArrayList<String> names = new ArrayList<String>();
+
+		// 自動的にStringに変換・格納される
+		names.add("湊");
+		names.add("朝香");
+		names.add("菅原");
+
+		// イテレータの取得
+		Iterator<String> it = names.iterator();
+	}
+
+}

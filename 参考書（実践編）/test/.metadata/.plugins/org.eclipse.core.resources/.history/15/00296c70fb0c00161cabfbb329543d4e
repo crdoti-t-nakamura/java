@@ -1,0 +1,28 @@
+package test1;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+public class Main {
+
+	// メインメソッド
+	public static void main(String[] args) throws IOException {
+
+		Fish fishList = new Fish( 1, "アオブダイ", "http://crdoti.co.jp/furuya/1.png");
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+
+		String json = mapper.writeValueAsString(fishList);
+
+		System.out.println(json);
+
+	}
+
+}

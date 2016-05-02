@@ -1,0 +1,10 @@
+INDEX VERSION 1.127+C:\Edu\download\pleiades-e4.4-java-jre_20150310\pleiades\workspace\参考書（実践編）\第１章\.metadata\.plugins\org.eclipse.jdt.core
+1733809854.index
+4180886301.index
+2385802123.index
+1860278933.index
+434547203.index
+4267607812.index
+389882417.index
+273737256.index
+2304358290.index
