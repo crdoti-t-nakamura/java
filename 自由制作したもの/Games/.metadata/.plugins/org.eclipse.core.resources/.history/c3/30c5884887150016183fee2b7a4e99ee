@@ -1,0 +1,75 @@
+package test_game2.DataBase;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class Save {
+
+	public void Save() {
+		// STEP 0: 事前準備（JAR配置を含む）
+		try {
+	
+			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("ドライバー読み込み");
+	
+		} catch(ClassNotFoundException e) {
+	
+			e.printStackTrace();
+			System.out.println("失敗");
+	
+		}
+
+		Connection con = null;
+		PreparedStatement ps = null;
+
+		try {
+
+			// STEP 1: データベースの接続
+			con = DriverManager.getConnection("jdbc:mysql://localhost/Game_db?hero_tableEncoding=utf8", "root", "1234");
+			// STEP 2: SQL送信処理
+			System.out.println("接続");
+			// name,bloodType,ageのデータを検索するSQL文を作成
+			String sql = "SQL文入力";
+
+			// ステートメントオブジェクトを生成
+			ps = con.prepareStatement(sql);
+
+//			ps.setString(1, searchWord);
+
+			// クエリーを実行して結果セットを取得
+			ResultSet rs = ps.executeQuery();
+
+
+		} catch(SQLException e) {
+			try {
+				con.rollback();
+			} catch(SQLException e2) {
+				e2.printStackTrace();
+			} finally {
+				// STEP 3: データベース接続の切断
+				if(con != null) {
+					try {
+						con.close();
+					} catch(SQLException e3) {
+						e3.printStackTrace();
+						System.out.println("失敗");
+					}
+				}
+			}	
+		} finally {
+			System.out.println("切断");
+			// STEP 3: データベース接続の切断
+			if(con != null) {
+				try {
+					con.close();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
+}
