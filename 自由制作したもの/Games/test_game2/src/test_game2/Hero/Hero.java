@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import test_game2.Monster.Monster;
 import test_game2.Protecter.Normal;
@@ -20,6 +21,8 @@ public class Hero {
 	private int gold;
 	private int sword;
 	private int protecter;
+
+	private ArrayList<String> log;
 
 	// 定数の宣言
 	private final int MAX_EXP[] = {    0,  100,   200,   300,   500,   700,  1000,  1500,  2000,   3000, 
@@ -41,10 +44,13 @@ public class Hero {
 		this.gold = 1000;
 		this.sword = new Fragarach().getAttack();
 		this.protecter = new Normal().getDefense();
+		this.log = new ArrayList<String>(); 
 	}
 
 	// attackメソッド
 	public boolean attack(Monster m) {
+		int totalHeroAttack = 0;
+		int totalEnemyAttack = 0;
 		while(true) {
 			// 変数の宣言
 			int attack;
@@ -57,10 +63,10 @@ public class Hero {
 				break;
 			}
 
-			// プレイヤ：敵が７：３の確率で攻撃
+			// プレイヤー：敵の確率で攻撃（確率は敵が所持  例 7:3, 5:5）
 			int turn = new java.util.Random().nextInt(10);
 
-			// プレイヤの攻撃
+			// プレイヤーの攻撃
 			if(turn >= m.getHit()) {
 				System.out.printf("プレイヤーの攻撃！\n");
 
@@ -71,6 +77,7 @@ public class Hero {
 						(this.ATTACK[level] + this.sword) * 0.8f) + (float)random);
 
 				System.out.printf("%dダメージ！\n", attack);
+				totalHeroAttack += attack;
 				enemyHp = m.getHp() - attack;
 				if(enemyHp <= 0) { enemyHp = 0; }
 				m.setHp(enemyHp); 
@@ -82,14 +89,17 @@ public class Hero {
 				m.attack();
 				attack = m.getAttack();
 				System.out.printf("%dダメージ！\n", attack);
+				totalEnemyAttack += attack;
 				playerHp = this.hp - attack;
 				if(playerHp <= 0) { playerHp = 0; }
 				this.hp = playerHp; 
 			}
 			if(this.mp < MAX_MP[level]) {
-				this.mp += 5;
+				this.mp += 10;
 			}
 		}
+		System.out.printf("\n総与ダメージ：%d\n", totalHeroAttack);
+		System.out.printf("総被ダメージ：%d\n\n", totalEnemyAttack);
 		if(this.hp <= 0) { return false; }
 		return true;
 	}
@@ -112,18 +122,68 @@ public class Hero {
 		}
 	}
 
-	// 回復メソッド
+	// プレイヤー状態確認メソッド
+	public void HeroStatus() {
+		int i;
+
+		// レベル
+		System.out.printf("Lv.%d\n", this.level);
+
+		// HPゲージ
+		int maxHp = this.getMaxHp(); 
+		System.out.printf("HP:%5d/%5d", this.hp, this.getMaxHp());
+		for(i = 0; i < maxHp; i++) {
+			if(i % 500 == 0){
+				if(this.hp >= i) {
+					System.out.printf("■");
+				} else {
+					System.out.printf("□");
+				}
+			}
+		}
+		System.out.printf("\n");
+
+		// MPゲージ
+		int maxMp = this.getMaxMp(); 
+		System.out.printf("MP:%5d/%5d", this.mp, this.getMaxMp());
+		for(i = 0; i < maxMp; i++) {
+			if(i % 50 == 0){
+				if(this.mp >= i) {
+					System.out.printf("■");
+				} else {
+					System.out.printf("□");
+				}
+			}
+		}
+		System.out.printf("\n");
+
+		System.out.printf("EXP:%d ATTACK:%d GOLD:%d\n", this.exp, this.getAttack(), gold);
+		System.out.printf("\n");
+
+	}
+
+	// 魔法での回復メソッド
 	public void aid() {
 		System.out.println("回復魔法を唱えた！");
-		int aid = new java.util.Random().nextInt(150);
-		aid += 150;
+		int aid = new java.util.Random().nextInt(200);
+		aid += 400;
 		System.out.printf("HPが%d回復した！\n", aid);
+//		setLog("MP50消費してHPを" + aid + "回復しました");
 		if(hp + aid >= MAX_HP[level] * protecter) {
 			hp = MAX_HP[level] * protecter;
 		} else {
 			hp += aid;
 		}
 		mp -= 50;
+	}
+	// 宿での回復メソッド
+	public void InnAid() {
+		System.out.println("宿に泊まった！");
+		int aid = MAX_HP[level] * protecter - this.hp;
+		this.hp = MAX_HP[level] * protecter;
+		System.out.printf("HPが%d回復した！\n", aid);
+//		setLog("1000Gold消費してHPを" + aid + "回復しました");
+		this.gold -= 1000;
 	}
 
 	// HPチェックメソッド
@@ -159,7 +219,7 @@ public class Hero {
 					this.setSword(result.getInt(7));
 					this.setProtecter(result.getInt(8));
 
-					System.out.printf("ID        : %6d\n", result.getInt(1));
+					System.out.printf("%2d番目\n", result.getInt(1));
 					System.out.printf("EXP       : %6d\n", this.exp);
 					System.out.printf("HP        : %6d\n", this.hp);
 					System.out.printf("MP        : %6d\n", this.mp);
@@ -217,14 +277,15 @@ public class Hero {
 		ResultSet result = null;
 
 		try {
+
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-	
+
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Game_db?useUnicode=true&characterEncoding=EUC_JP&useSSL=false&requireSSL=false", "root", "1234");
 			stmt = con.createStatement();
 			result = stmt.executeQuery(sql);
-	
+
 			while(result.next()) {
-	
+
 				// 経験値が0の場合は表示しない
 				// だが実際には1～10まで存在している
 				if(result.getInt(2) != 0){
@@ -236,10 +297,11 @@ public class Hero {
 					System.out.printf("Gold : %6d, ", result.getInt(6));
 					System.out.printf("Sword : %3d, ", result.getInt(7));
 					System.out.printf("Protecter : %d\n", result.getInt(8));
-		
+
 					i++;
 				}
 			}
+
 		} catch (InstantiationException | IllegalAccessException
 											| ClassNotFoundException e1) {
 			// 自動生成された catch ブロック
@@ -289,13 +351,13 @@ public class Hero {
 		try {
 
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-	
+
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Game_db?useUnicode=true&characterEncoding=EUC_JP&useSSL=false&requireSSL=false", "root", "1234");
 			con.setAutoCommit(false);
 
 			stmt = con.createStatement();
 			int j = stmt.executeUpdate(sql);
-	
+
 			//処理件数を表示する
             System.out.printf("\n処理件数：%d\n", j);
 
@@ -305,6 +367,7 @@ public class Hero {
 
 			try {
 				con.rollback();
+				System.out.println("コミット出来ませんでした、ロールバックします");
 			} catch (SQLException e2) {
 				// 自動生成された catch ブロック
 				e2.printStackTrace();
@@ -361,6 +424,16 @@ public class Hero {
 	public int maxLevel() {
 		return MAX_LEVEL;
 	}
+	public int getMaxHp() {
+		return MAX_HP[level] * protecter;
+	}
+	public int getMaxMp() {
+		return MAX_MP[level];
+	}
+	public ArrayList<String> getLog() {
+		return log;
+	}
+
 	public void setExp(int exp) {
 		this.exp = exp;
 	}
@@ -381,5 +454,8 @@ public class Hero {
 	}
 	public void setProtecter(int protecter) {
 		this.protecter = protecter;
-	}	
+	}
+	public void setLog(String move) {
+		log.add(move);
+	}
 }

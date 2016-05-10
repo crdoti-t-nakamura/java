@@ -11,6 +11,7 @@ import test_game2.Monster.Veetle;
 import test_game2.Monster.Vird;
 import test_game2.Monster.Vish;
 import test_game2.Monster.Volf;
+import test_game2.Monster.Vragon;
 import test_game2.Protecter.Brigandine;
 import test_game2.Protecter.ChainMail;
 import test_game2.Protecter.Normal;
@@ -33,7 +34,7 @@ public class Main {
 		int input;
 
 		// モンスターの種類、インスタンス
-		final int MONSTER_TYPE = 5;
+		final int MONSTER_TYPE = 6;
 		Monster monster[] = new Monster[MONSTER_TYPE];
 
 		// 武器の種類、インスタンス
@@ -62,21 +63,20 @@ public class Main {
 		while(true) {
 
 			// プレイヤーの状態確認
-			System.out.printf("プレイヤーの現在の状態\n");
-			System.out.printf("LEVEL:%d HP:%d MP:%d EXP:%d ATTACK:%d GOLD:%d\n\n",
-					h.getLevel(), h.getHp(), h.getMp(), h.getExp(), h.getAttack(), h.getGold());
+			System.out.printf("現在の状態\n\n");
+			h.HeroStatus();
 
 			// 入力を促すメッセージを出力
-			System.out.print("どうする？ 1:戦う 2:魔法 3:武器 4:防具 5:セーブ 6:ロード 7:終了 > ");
+			System.out.print("どうする？ 1:戦う 2:回復魔法 3:宿泊 4:武器 5:防具 6:セーブ 7:ロード 8:終了 > ");
 			input = new Scanner(System.in).nextInt();
 
 			// 入力した値の判別
-			if(input == 7) {			// ゲーム終了
+			if(input == 8) {			// ゲーム終了
 
 				// 終了
 				break;
 
-			} else if(input == 5) {		// Save
+			} else if(input == 6) {		// Save
 				int SaveSize = h.TableCheck();
 				if(SaveSize - 1 == 1) {
 					System.out.printf("どこにデータを保存しますか？(1:上書き保存 or 0:新規保存) > ");
@@ -96,7 +96,7 @@ public class Main {
 					System.out.printf("\nセーブをキャンセルしました\n");
 				}
 
-			} else if(input == 6) {		// Load
+			} else if(input == 7) {		// Load
 
 				int LoadSize = h.TableCheck();
 				System.out.println("どのデータを読み込みますか？ > ");
@@ -108,10 +108,10 @@ public class Main {
 					System.out.println("ロードをキャンセルしました");
 				}
 
-			} else if(input == 2) {		// 回復する
+			} else if(input == 2) {		// 魔法で4回復する
 
 				// 入力を促すメッセージ
-				System.out.printf("\nHPが200前後回復します\n");
+				System.out.printf("\nHPが500前後回復します\n");
 				System.out.printf("MPを50消費して回復魔法を唱えますか？ 1:Yes 2:No > \n");
 
 				// 入力受け付け
@@ -124,9 +124,25 @@ public class Main {
 					h.aid();
 				}
 
+			} else if(input == 3) {		// 宿で回復する
+
+					// 入力を促すメッセージ
+					System.out.printf("\nHPが全回復します\n");
+					System.out.printf("Goldを1000消費して宿に泊まりますか？ 1:Yes 2:No > \n");
+
+					// 入力受け付け
+					input = new Scanner(System.in).nextInt();
+
+					// MPがあるかどうか確認
+					if(h.getGold() < 1000) {
+						System.out.println("Goldが足りません");
+					} else if(input == 1) {
+						h.InnAid();
+					}
+
 
 			// 装備
-			} else if(input == 3) {		// 武器
+			} else if(input == 4) {		// 武器
 
 				// 入力を促すメッセージ
 				System.out.printf("何に変えますか？\n");
@@ -142,13 +158,14 @@ public class Main {
 					if(h.getLevel() >= sword[input - 1].getForLevel()) {
 						h.setSword(sword[input - 1].getAttack());
 						System.out.printf("%sに変更しました\n", sword[input - 1].getName());
+//						h.setLog("武器を" + sword[input - 1].getName() + "に変更しました");
 					} else {
 						System.out.printf("レベルが足りません\n");
 						System.out.printf("あと%dレベルあげる必要があります\n", sword[input - 1].getForLevel() - h.getLevel());
 					}
 				}
 
-			} else if(input == 4) {		// 防具
+			} else if(input == 5) {		// 防具
 
 				// 入力を促すメッセージ
 				System.out.printf("何に変えますか？\n");
@@ -164,6 +181,7 @@ public class Main {
 					if(h.getLevel() >= protecter[input - 1].getForLevel()) {
 						h.setProtecter(protecter[input - 1].getDefense());
 						System.out.printf("%sに変更しました\n", protecter[input - 1].getName());
+//						h.setLog("防具を" + protecter[input - 1].getName() + "に変更しました");
 					} else {
 						System.out.printf("レベルが足りません\n");
 						System.out.printf("あと%dレベルあげる必要があります\n", protecter[input - 1].getForLevel() - h.getLevel());
@@ -178,12 +196,13 @@ public class Main {
 				monster[1] = new Volf();		// オオカミ
 				monster[2] = new Vird();		// バード
 				monster[3] = new Veetle();		// ビートル
-				monster[4] = new VasVoss();		// ボス
+				monster[4] = new Vragon();		// ドラゴン
+				monster[5] = new VasVoss();		// ボス
 
 				// 入力を促すメッセージを出力
 				System.out.printf("\n何と戦う？\n");
 				for(i = 0; i < MONSTER_TYPE; i++) {
-					System.out.printf("%d:%-5s HP:%5d  推奨レベル%2d以上\n",i + 1,
+					System.out.printf("%d:%s HP:%6d  推奨レベル%2d以上\n",i + 1,
 							monster[i].getName(), monster[i].getHp(), monster[i].getRecLevel());
 				}
 
@@ -212,18 +231,26 @@ public class Main {
 	
 					// 戦闘終了
 					if(combat) {
-						System.out.printf("\n%sを倒した！\n\n", monster[input - 1].getName());
-						if(input != 5) {
+						System.out.printf("\n%sを倒した！\n", monster[input - 1].getName());
+						monster[input - 1].run();
+						System.out.println("");
+//						h.setLog(monster[input -1].getName() + "を倒した");
+
+						if(input != 6) {
 							dExp = monster[input - 1].getExp();
 							dGold = monster[input - 1].getGold();
 							System.out.printf("経験値%dを手に入れた！\n", dExp);
+//							h.setLog(dExp + "経験値を手に入れた");
 							h.setExp(dExp + h.getExp());
 							System.out.printf("%dGoldを手に入れた！\n", dGold);
+//							h.setLog(dGold + "Goldを手に入れた");
 							h.setGold(dGold + h.getGold());
 							h.levelConfirmation();
 						}
-						if(input == 5){
-							System.out.println("世界に平和が訪れた！");
+						if(input == 6){
+							// プレイヤーの状態確認
+							System.out.printf("\n最終プレイヤー状態\n\n");
+							h.HeroStatus();
 							break;
 						}
 					}
