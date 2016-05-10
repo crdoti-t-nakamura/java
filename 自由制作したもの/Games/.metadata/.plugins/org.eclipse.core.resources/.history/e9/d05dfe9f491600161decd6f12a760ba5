@@ -83,7 +83,7 @@ public class Main {
 					if(SaveSize - 1 == 1) {
 						System.out.printf("どこにデータを保存しますか？(1:上書き保存 or 0:新規保存) > ");
 					} else {
-						System.out.printf("どこにデータを保存しますか？(1～%d:上書き保存 or 0:新規保存) > ", SaveSize - 1);
+						System.out.printf("どこにデータを保存しますか？(1～%d:上書き保存 or 0:新規保存) > ", SaveSize);
 					}
 					input = new Scanner(System.in).nextInt();
 					if(0 < input && input < SaveSize) {			// 上書き保存
@@ -105,7 +105,7 @@ public class Main {
 							e2.printStackTrace();
 						}
 					} else {
-						System.out.printf("\nセーブをキャンセルしました\n");
+						System.out.printf("セーブをキャンセルしました\n");
 					}
 				} catch (InstantiationException | IllegalAccessException
 						| ClassNotFoundException | SQLException e3) {

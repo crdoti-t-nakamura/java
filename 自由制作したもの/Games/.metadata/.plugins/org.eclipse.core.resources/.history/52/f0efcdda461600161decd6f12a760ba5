@@ -80,32 +80,26 @@ public class Main {
 			} else if(input == 5) {		// Save
 				try {
 					int SaveSize = h.TableCheck();
-					if(SaveSize - 1 == 1) {
-						System.out.printf("どこにデータを保存しますか？(1:上書き保存 or 0:新規保存) > ");
-					} else {
-						System.out.printf("どこにデータを保存しますか？(1～%d:上書き保存 or 0:新規保存) > ", SaveSize - 1);
-					}
+					System.out.println("どこにデータを保存しますか？ > ");
 					input = new Scanner(System.in).nextInt();
-					if(0 < input && input < SaveSize) {			// 上書き保存
-						try {
-							h.UpdateSaveData(input);
+					if(0 < input && input < SaveSize) {
+//						try {
+//							h.UpdateSaveData(input);
 							System.out.printf("%dに上書き保存しました\n", input);
-						} catch (InstantiationException | IllegalAccessException
-								| ClassNotFoundException | SQLException e1) {
+//						} catch (InstantiationException | IllegalAccessException
+//								| ClassNotFoundException | SQLException e1) {
 							// 自動生成された catch ブロック
-							e1.printStackTrace();
-						}
-					} else if(input == 0) {						// 新規保存（実際には上書き保存）
+//							e1.printStackTrace();
+//						}
+					} else {
 						try {
-							h.UpdateSaveData(SaveSize);
-							System.out.printf("%dに新規保存しました\n", SaveSize);
+							h.NewSaveData();
+							System.out.printf("新規保存しました\n");
 						} catch (InstantiationException | IllegalAccessException
 								| ClassNotFoundException | SQLException e2) {
 							// 自動生成された catch ブロック
 							e2.printStackTrace();
 						}
-					} else {
-						System.out.printf("\nセーブをキャンセルしました\n");
 					}
 				} catch (InstantiationException | IllegalAccessException
 						| ClassNotFoundException | SQLException e3) {

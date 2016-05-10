@@ -2,6 +2,7 @@ package test_game2.Hero;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -234,7 +235,7 @@ public class Hero {
 			int j = stmt.executeUpdate(sql);
 	
 			//処理件数を表示する
-            System.out.printf("\n処理件数：%d\n", j);
+            System.out.printf("\n処理件数：%d", j);
 
 			con.commit();
 
@@ -255,13 +256,7 @@ public class Hero {
 			}
 		}
 	}
-/*
- * 新規フィールド追加する予定だったもの
- * 
- * 元々フィールド作成しておき、値が入っていないものは
- * 表示させず変更も出来ないように修正したため、
- * UPDATE文のみで十分になった
- * 
+
 	// MySQLでデータをセーブ
 	public void NewSaveData() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 
@@ -307,7 +302,7 @@ public class Hero {
 			}
 		}
 	}
-*/
+
 	// ゲッターセッターメソッド
 	public int getExp() {
 		return this.exp;

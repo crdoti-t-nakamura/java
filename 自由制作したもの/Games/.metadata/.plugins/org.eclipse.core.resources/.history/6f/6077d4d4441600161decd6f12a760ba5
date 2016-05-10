@@ -2,6 +2,7 @@ package test_game2.Hero;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -189,20 +190,16 @@ public class Hero {
 
 		while(result.next()) {
 
-			// 経験値が0の場合は表示しない
-			// だが実際には1～10まで存在している
-			if(result.getInt(2) != 0){
-				System.out.printf("%2d, ", result.getInt(1));
-				System.out.printf("Exp : %6d, ", result.getInt(2));
-				System.out.printf("HP : %5d, ", result.getInt(3));
-				System.out.printf("MP : %4d, ", result.getInt(4));
-				System.out.printf("Level : %2d, ", result.getInt(5));
-				System.out.printf("Gold : %6d, ", result.getInt(6));
-				System.out.printf("Sword : %3d, ", result.getInt(7));
-				System.out.printf("Protecter : %d\n", result.getInt(8));
-	
-				i++;
-			}
+			System.out.printf("%2d, ", result.getInt(1));
+			System.out.printf("Exp : %6d, ", result.getInt(2));
+			System.out.printf("HP : %5d, ", result.getInt(3));
+			System.out.printf("MP : %4d, ", result.getInt(4));
+			System.out.printf("Level : %2d, ", result.getInt(5));
+			System.out.printf("Gold : %6d, ", result.getInt(6));
+			System.out.printf("Sword : %3d, ", result.getInt(7));
+			System.out.printf("Protecter : %d\n", result.getInt(8));
+
+			i++;
 
 		}
 
@@ -216,12 +213,10 @@ public class Hero {
 	// MySQLでデータをセーブ
 	public void UpdateSaveData(int input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 
-		String sql = "UPDATE hero_table2 SET exp = " + exp + ", hp = " + hp + ", mp = " + mp + ", level = " + level +
-								", gold = " + gold + ", sword = " + sword + ", protecter = " + protecter + " WHERE id = " + input;
+		String sql = "UPDATE hero_table2 exp = ?, hp = ?, mp = ?, level = ?, gold = ?, sword = ?, protecter = ? WHERE id = ?";
 
 		Connection con = null;
-		Statement stmt = null;
-		ResultSet rs = null;
+		PreparedStatement ps = null;
 
 		try {
 
@@ -230,11 +225,20 @@ public class Hero {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Game_db?useUnicode=true&characterEncoding=EUC_JP&useSSL=false&requireSSL=false", "root", "1234");
 			con.setAutoCommit(false);
 
-			stmt = con.createStatement();
-			int j = stmt.executeUpdate(sql);
+			Statement stmt = con.createStatement();
+//			ResultSet result = stmt.executeQuery(sql);
 	
+			int j = stmt.executeUpdate(sql);
+/*
+			while(result.next()) {
+				if(input == i) {
+					
+				}
+				i++;
+			}
+*/
 			//処理件数を表示する
-            System.out.printf("\n処理件数：%d\n", j);
+            System.out.println("処理件数：" + j);
 
 			con.commit();
 
@@ -244,24 +248,15 @@ public class Hero {
 			e.printStackTrace();
 
 		} finally {
+			if(ps != null) {
+				ps.close();
+			}
 			if(con != null) {
 				con.close();
 			}
-			if(stmt != null) {
-				stmt.close();
-			}
-			if(rs != null) {
-				rs.close();
-			}
 		}
 	}
-/*
- * 新規フィールド追加する予定だったもの
- * 
- * 元々フィールド作成しておき、値が入っていないものは
- * 表示させず変更も出来ないように修正したため、
- * UPDATE文のみで十分になった
- * 
+
 	// MySQLでデータをセーブ
 	public void NewSaveData() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 
@@ -307,7 +302,7 @@ public class Hero {
 			}
 		}
 	}
-*/
+
 	// ゲッターセッターメソッド
 	public int getExp() {
 		return this.exp;
