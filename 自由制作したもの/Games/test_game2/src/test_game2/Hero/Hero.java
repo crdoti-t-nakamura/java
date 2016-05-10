@@ -134,87 +134,150 @@ public class Hero {
 	}
 
 	// MySQLでデータをロード
-	public void LoadData(int input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void LoadData(int input) {
 
 		String sql = "SELECT * FROM hero_table2";
 		int i = 1;
+		Connection con = null;
+		Statement stmt = null;
+		ResultSet result = null;
 
-		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Game_db?useUnicode=true&characterEncoding=EUC_JP&useSSL=false&requireSSL=false", "root", "1234");
+			stmt = con.createStatement();
+			result = stmt.executeQuery(sql);
 
-		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Game_db?useUnicode=true&characterEncoding=EUC_JP&useSSL=false&requireSSL=false", "root", "1234");
-		Statement stmt = con.createStatement();
-		ResultSet result = stmt.executeQuery(sql);
+			while(result.next()) {
 
-		while(result.next()) {
+				if(i == input) {
+					this.setExp(result.getInt(2));
+					this.setHp(result.getInt(3));
+					this.setMp(result.getInt(4));
+					this.setLevel(result.getInt(5));
+					this.setGold(result.getInt(6));
+					this.setSword(result.getInt(7));
+					this.setProtecter(result.getInt(8));
 
-			if(i == input) {
-				this.setExp(result.getInt(2));
-				this.setHp(result.getInt(3));
-				this.setMp(result.getInt(4));
-				this.setLevel(result.getInt(5));
-				this.setGold(result.getInt(6));
-				this.setSword(result.getInt(7));
-				this.setProtecter(result.getInt(8));
+					System.out.printf("ID        : %6d\n", result.getInt(1));
+					System.out.printf("EXP       : %6d\n", this.exp);
+					System.out.printf("HP        : %6d\n", this.hp);
+					System.out.printf("MP        : %6d\n", this.mp);
+					System.out.printf("Level     : %6d\n", this.level);
+					System.out.printf("Gold      : %6d\n", this.gold);
+					System.out.printf("Sword     : %6d\n", this.sword);
+					System.out.printf("Protecter : %6d\n", this.protecter);
 
-				System.out.printf("ID        : %6d\n", result.getInt(1));
-				System.out.printf("EXP       : %6d\n", this.exp);
-				System.out.printf("HP        : %6d\n", this.hp);
-				System.out.printf("MP        : %6d\n", this.mp);
-				System.out.printf("Level     : %6d\n", this.level);
-				System.out.printf("Gold      : %6d\n", this.gold);
-				System.out.printf("Sword     : %6d\n", this.sword);
-				System.out.printf("Protecter : %6d\n", this.protecter);
-
-				System.out.println("");
-			}
-			i++;
-		}
-
-		con.close();
-		stmt.close();
-		result.close();
-	}
-
-	// MySQLでデータをロード
-	public int TableCheck() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-
-		String sql = "SELECT * FROM hero_table2";
-		int i = 1;
-
-		Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Game_db?useUnicode=true&characterEncoding=EUC_JP&useSSL=false&requireSSL=false", "root", "1234");
-		Statement stmt = con.createStatement();
-		ResultSet result = stmt.executeQuery(sql);
-
-		while(result.next()) {
-
-			// 経験値が0の場合は表示しない
-			// だが実際には1～10まで存在している
-			if(result.getInt(2) != 0){
-				System.out.printf("%2d, ", result.getInt(1));
-				System.out.printf("Exp : %6d, ", result.getInt(2));
-				System.out.printf("HP : %5d, ", result.getInt(3));
-				System.out.printf("MP : %4d, ", result.getInt(4));
-				System.out.printf("Level : %2d, ", result.getInt(5));
-				System.out.printf("Gold : %6d, ", result.getInt(6));
-				System.out.printf("Sword : %3d, ", result.getInt(7));
-				System.out.printf("Protecter : %d\n", result.getInt(8));
-	
+					System.out.println("");
+				}
 				i++;
 			}
-
+		} catch (InstantiationException | IllegalAccessException
+											| ClassNotFoundException e1) {
+			// 自動生成された catch ブロック
+			e1.printStackTrace();
+		} catch (SQLException e2) {
+			//  自動生成された catch ブロック
+			e2.printStackTrace();
+		} finally {
+			if(con != null) {
+				try {
+					con.close();
+				} catch (SQLException e3) {
+					// 自動生成された catch ブロック
+					e3.printStackTrace();
+				}
+			}
+			if(stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException e4) {
+					// 自動生成された catch ブロック
+					e4.printStackTrace();
+				}
+			}
+			if(result != null) {
+				try {
+					result.close();
+				} catch (SQLException e5) {
+					// 自動生成された catch ブロック
+					e5.printStackTrace();
+				}
+			}
 		}
+	}
 
-		con.close();
-		stmt.close();
-		result.close();
+	// MySQLで現在のデータを確認する
+	public int TableCheck() {
 
+		String sql = "SELECT * FROM hero_table2";
+		int i = 1;
+		Connection con = null;
+		Statement stmt = null;
+		ResultSet result = null;
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+	
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Game_db?useUnicode=true&characterEncoding=EUC_JP&useSSL=false&requireSSL=false", "root", "1234");
+			stmt = con.createStatement();
+			result = stmt.executeQuery(sql);
+	
+			while(result.next()) {
+	
+				// 経験値が0の場合は表示しない
+				// だが実際には1～10まで存在している
+				if(result.getInt(2) != 0){
+					System.out.printf("%2d, ", result.getInt(1));
+					System.out.printf("Exp : %6d, ", result.getInt(2));
+					System.out.printf("HP : %5d, ", result.getInt(3));
+					System.out.printf("MP : %4d, ", result.getInt(4));
+					System.out.printf("Level : %2d, ", result.getInt(5));
+					System.out.printf("Gold : %6d, ", result.getInt(6));
+					System.out.printf("Sword : %3d, ", result.getInt(7));
+					System.out.printf("Protecter : %d\n", result.getInt(8));
+		
+					i++;
+				}
+			}
+		} catch (InstantiationException | IllegalAccessException
+											| ClassNotFoundException e1) {
+			// 自動生成された catch ブロック
+			e1.printStackTrace();
+		} catch (SQLException e2) {
+			//  自動生成された catch ブロック
+			e2.printStackTrace();
+		} finally {
+			if(con != null) {
+				try {
+					con.close();
+				} catch (SQLException e3) {
+					// 自動生成された catch ブロック
+					e3.printStackTrace();
+				}
+			}
+			if(stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException e4) {
+					// 自動生成された catch ブロック
+					e4.printStackTrace();
+				}
+			}
+			if(result != null) {
+				try {
+					result.close();
+				} catch (SQLException e5) {
+					// 自動生成された catch ブロック
+					e5.printStackTrace();
+				}
+			}
+		}
 		return i;
 	}
 
 	// MySQLでデータをセーブ
-	public void UpdateSaveData(int input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void UpdateSaveData(int input){
 
 		String sql = "UPDATE hero_table2 SET exp = " + exp + ", hp = " + hp + ", mp = " + mp + ", level = " + level +
 								", gold = " + gold + ", sword = " + sword + ", protecter = " + protecter + " WHERE id = " + input;
@@ -238,76 +301,44 @@ public class Hero {
 
 			con.commit();
 
-		} catch (Exception e) {
+		} catch (Exception e1) {
 
-			con.rollback();
-			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e2) {
+				// 自動生成された catch ブロック
+				e2.printStackTrace();
+			}
+			e1.printStackTrace();
 
 		} finally {
 			if(con != null) {
-				con.close();
+				try {
+					con.close();
+				} catch (SQLException e3) {
+					// 自動生成された catch ブロック
+					e3.printStackTrace();
+				}
 			}
 			if(stmt != null) {
-				stmt.close();
+				try {
+					stmt.close();
+				} catch (SQLException e4) {
+					// 自動生成された catch ブロック
+					e4.printStackTrace();
+				}
 			}
 			if(rs != null) {
-				rs.close();
+				try {
+					rs.close();
+				} catch (SQLException e5) {
+					// 自動生成された catch ブロック
+					e5.printStackTrace();
+				}
 			}
 		}
 	}
-/*
- * 新規フィールド追加する予定だったもの
- * 
- * 元々フィールド作成しておき、値が入っていないものは
- * 表示させず変更も出来ないように修正したため、
- * UPDATE文のみで十分になった
- * 
-	// MySQLでデータをセーブ
-	public void NewSaveData() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 
-		String sql = "INSERT INTO hero_table2 (exp, hp, mp, level, gold, sword, protecter) value (?, ?, ?, ?, ?, ?, ?)";
-
-		Connection con = null;
-		PreparedStatement ps = null;
-
-		try {
-
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-	
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Game_db?useUnicode=true&characterEncoding=EUC_JP&useSSL=false&requireSSL=false", "root", "1234");
-			con.setAutoCommit(false);
-	
-			ps = con.prepareStatement(sql);
-			ps.setInt(2, exp);
-			ps.setInt(3, hp);
-			ps.setInt(4, mp);
-			ps.setInt(5, level);
-			ps.setInt(6, gold);
-			ps.setInt(7, sword);
-			ps.setInt(8, protecter);
-	
-			int i = ps.executeUpdate();
-
-			//処理件数を表示する
-            System.out.println("処理件数：" + i);
-
-			con.commit();
-
-		} catch (Exception e) {
-
-			con.rollback();
-			e.printStackTrace();
-
-		} finally {
-			if(ps != null) {
-				ps.close();
-			}
-			if(con != null) {
-				con.close();
-			}
-		}
-	}
-*/
 	// ゲッターセッターメソッド
 	public int getExp() {
 		return this.exp;
